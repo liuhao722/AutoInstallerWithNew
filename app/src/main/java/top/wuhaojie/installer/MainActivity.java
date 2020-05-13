@@ -1,6 +1,5 @@
 package top.wuhaojie.installer;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Environment;
@@ -8,14 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.MultiplePermissionsReport;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
-
 import java.io.File;
-import java.util.List;
 
 import top.wuhaojie.installerlibrary.AutoInstaller;
 
@@ -45,8 +37,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         /* 方案一: 默认安装器 */
         AutoInstaller installer = AutoInstaller.getDefault(MainActivity.this);
-//        installer.install(APK_FILE_PATH);
-        installer.installFromUrl(APK_URL);
+        installer.install(APK_FILE_PATH);
+//        installer.installFromUrl(APK_URL);
         installer.setOnStateChangedListener(new AutoInstaller.OnStateChangedListener() {
             @Override
             public void onStart() {
@@ -65,19 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void needPermission() {
-                Dexter.withActivity(MainActivity.this).withPermissions(
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE).withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
                 Toast.makeText(MainActivity.this, "需要申请存储空间权限", Toast.LENGTH_SHORT).show();
             }
         });

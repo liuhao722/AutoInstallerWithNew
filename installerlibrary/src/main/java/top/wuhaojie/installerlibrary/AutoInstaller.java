@@ -17,6 +17,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,6 +34,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -47,7 +54,7 @@ public class AutoInstaller extends Handler {
 
 
     private static volatile AutoInstaller mAutoInstaller;
-    private Context mContext;
+    private Activity mContext;
     private String mTempPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Download";
 
     public enum MODE {
@@ -58,11 +65,11 @@ public class AutoInstaller extends Handler {
 
     private MODE mMode = MODE.BOTH;
 
-    private AutoInstaller(Context context) {
+    private AutoInstaller(Activity context) {
         mContext = context;
     }
 
-    public static AutoInstaller getDefault(Context context) {
+    public static AutoInstaller getDefault(Activity context) {
         if (mAutoInstaller == null) {
             synchronized (AutoInstaller.class) {
                 if (mAutoInstaller == null) {
@@ -140,6 +147,19 @@ public class AutoInstaller extends Handler {
     private void installUseAS(String filePath) {
         // 存储空间
         if (permissionDenied()) {
+            Dexter.withActivity(mContext).withPermissions(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE).withListener(new MultiplePermissionsListener() {
+                @Override
+                public void onPermissionsChecked(MultiplePermissionsReport report) {
+
+                }
+
+                @Override
+                public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                    token.continuePermissionRequest();
+                }
+            }).check();
             sendEmptyMessage(4);
             return;
         }
@@ -401,11 +421,11 @@ public class AutoInstaller extends Handler {
     public static class Builder {
 
         private MODE mode = MODE.BOTH;
-        private Context context;
+        private Activity context;
         private OnStateChangedListener onStateChangedListener;
         private String directory = Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        public Builder(Context c) {
+        public Builder(Activity c) {
             context = c;
         }
 

@@ -23,6 +23,4 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation project(':installerlibrary')
-    //  权限请求
-    implementation 'com.karumi:dexter:5.0.0'
 }
