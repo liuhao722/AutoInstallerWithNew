@@ -38,7 +38,7 @@ import javax.net.ssl.X509TrustManager;
 import top.wuhaojie.installerlibrary.utils.Utils;
 
 /**
- * Created by wuhaojie on 2016/7/25 22:17.
+ * 静默安装主类
  */
 public class AutoInstaller extends Handler {
 

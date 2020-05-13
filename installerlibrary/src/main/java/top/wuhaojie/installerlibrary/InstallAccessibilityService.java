@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by wuhaojie on 2016/7/25 23:15.
+ * 静默安装的service
  */
 public class InstallAccessibilityService extends android.accessibilityservice.AccessibilityService {
 
